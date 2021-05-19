@@ -1,0 +1,160 @@
+<Boutons_cercle>:
+	size:root.btLCercl,root.btHCercl
+	pos:root.cordx,root.cordy
+	canvas:
+		Color:
+			rgba:root.couleur
+		Line:
+			circle:root.cordx,root.cordy,5
+<Boutons_angle>:
+	size:10,10
+	pos:root.cordx,root.cordy
+	canvas:
+		Color:
+			rgba:root.couleur
+		Point:
+			points:root.cordx,root.cordy
+			pointsize:1.0
+
+<Barres>
+	pos:root.ctrPtxVirtuel,root.ctrPtyVirtuel
+	size:root.largeurWidget,root.hauteurWidget
+	canvas:
+		Color:
+			rgba:root.couleur
+		Line:
+			width:root.largeurCanva
+			points:root.ctrPtxVirtuel,root.ctrPtyVirtuel,root.ptxVirtuel,root.ptyVirtuel
+
+<Fleche>
+	canvas:
+		Color:
+			rgba:root.fleCouleur
+		Line:
+			width:3.0
+			points:root.ptX1,root.ptY1,root.ctrX,root.ctrY,root.ptX2,root.ptY2 
+
+<Zone_texte>
+	Label:
+		id:etiquette
+		pos:root.depart,root.hauteur
+		font_size:root.fontSize
+		size_hint: None, None
+		size: self.texture_size
+		text:root.libelle
+		color:0,0,0,1
+	Label:
+		id:signe1
+		pos:root.departS+root.espacement,root.hauteur
+		font_size:root.fontSize
+		text:root.signe1
+		size_hint: None, None
+		size: self.texture_size
+		color:root.couleurDirec
+	Label:
+		id:projecDirec
+		pos:root.departPd+root.espacement,root.hauteur
+		font_size:root.fontSize
+		size_hint: None, None
+		size: self.texture_size
+		text:root.projecDirec
+		color:root.couleurDirec
+	Image:
+		id:axeX
+		nocache:False
+		source:'images\\xVecteur.png'
+		pos:root.departAxeX+root.espacement,root.hauteur
+		size_hint: None, None
+		size: self.size[1]*0.69,projecDirec.size[1]
+
+	Label:
+		id:signe2
+		text:root.signe2
+		pos:root.departS2+root.espacement,root.hauteur
+		font_size:root.fontSize
+		size_hint: None, None
+		size: self.texture_size
+		color:root.couleurIndirec
+	Label:
+		id:projecIndirec
+		text:root.projecIndirec
+		pos:root.departPid+root.espacement,root.hauteur
+		font_size:root.fontSize
+		size_hint: None, None
+		size: self.texture_size
+		color:root.couleurIndirec
+	Image:
+		id:axeY
+		nocache:False
+		source:'images\\yVecteur.png'
+		pos:root.departAxeY+root.espacement,root.hauteur
+		size_hint: None, None
+		size: self.size[1]*0.67,projecIndirec.size[1]
+<Label_angle>
+	Label:
+		id:label
+		text:root.nom
+		size_hint: None, None
+		size: self.texture_size
+		color:root.couleurLabel
+<Label_x>
+	Label:
+		id:signeX
+		text:root.signe
+		size_hint: None, None
+		size: self.texture_size
+		color:root.couleurAxeX
+	Image:
+		id:vectxGris
+		source:'images\\xGrisTrans.png'
+		size_hint: None, None
+		size: self.size[1]*0.6,signeX.size[1]
+
+<Label_y>
+	Label:
+		id:signeY
+		text:root.signe
+		size_hint: None, None
+		size: self.texture_size
+		color:root.couleurAxeY
+	Image:
+		id:vectyGris
+		source:'images\\yGrisTrans.png'
+		size_hint: None, None
+		size: self.size[1]*0.67,signeY.size[1]
+
+<Choix_angle>
+	size:50,50
+	text:root.angle
+	color:(0,0,0,1) if self.state=='normal' else (1,1,1,1)
+	background_color: root.gris if self.state=='normal' else root.marron
+    background_normal: ""
+	background_down: ""
+	pos:root.largeur,root.hauteur
+	group:'desAngles'
+<cercl_sens>
+	Widget:
+		canvas:
+			Color:
+				rgba:root.couleurPoint	
+			Line:
+				circle:root.ctrIndicX,root.ctrIndicY,3
+				width:3
+	Widget:
+		canvas:
+			Color:
+				rgba:0,1,0,1
+			Line:
+				circle:root.ctrIndicX,root.ctrIndicY,root.rIndicSens
+	Widget:
+		canvas:
+			Color:
+				rgba:root.couleurAxe
+			Line:
+				points:root.x120,root.y120,root.x300,root.y300
+	Widget:
+		canvas:
+			Color:
+				rgba:root.couleurAxe
+			Line:
+				points:root.x60,root.y60,root.x240,root.y240
