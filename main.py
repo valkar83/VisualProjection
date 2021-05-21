@@ -19,7 +19,7 @@ def points_cardinaux(centrex,centrey,r,angle):
     ypos=round(centrey+r*sin(radians(angle)),2)
     #La coordonnée y de xPdroit se confond avec la coordonnée y du centre
     #Si x position est supérieure à centre x, alors x Plus, 
-    #Le même raisonnement est tenu pour les autres conditions
+    #Le même raisonnement est appliqué pour les autres conditions
     if ((centrey*0.99<ypos)and(ypos<centrey*1.01)) and xpos>centrex:
         if ((angle>= 358.5) and (angle <= 360)) or  ((angle >=0) and (angle <= 1.5)):
             angle=0
@@ -43,7 +43,6 @@ def points_cardinaux(centrex,centrey,r,angle):
 
 def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
     if nomAngle=='alpha':
-
         lettreAngle='α'
     else:
         lettreAngle='ß'
@@ -63,7 +62,7 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
             literalDirec='cos('+lettreAngle+')'
         #Pour la projection sur x : cos(afficheDirec)x
         #Si l'angle est supérieur est à 180°
-        #Si l'angle supplémentaire est activé
+        #Si l'angle complémentaire est activé
         if angleActiv:
             if abs(angle1)>180:
                 #Supérieur à 180° et positif
@@ -91,22 +90,48 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     literalDirecEq='cos(-'+lettreAngle+')'
                     signeLiteralDirecEqEq=' + '
                     literalDirecEqEq='cos('+lettreAngle+')'
-        #Si l'angle supplémentaire n'est pas activé
+        #Si l'angle complémentaire n'est pas activé
         else:
-            if angle1>0:
-                signeLiteralDirecEq=' + '
-                literalDirecEq='cos('+lettreAngle+')'
+            if angle1>=0:
                 signeLiteralDirecEqEq=' + '
-                literalDirecEqEq='cos('+lettreAngle+')'
+                literalDirecEqEq='cos('+lettreAngle+'/)'
+                if angle1==0:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos('+lettreAngle+') = +1'
+                elif angle1==90:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos('+lettreAngle+') = 0'
+                elif angle1==180:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos('+lettreAngle+') = -1'
+                elif angle1==270:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos('+lettreAngle+') = 0'
+                else:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos('+lettreAngle+')'
             else:
-                signeLiteralDirecEq=' + '
-                literalDirecEq='cos(-'+lettreAngle+')'
                 signeLiteralDirecEqEq=' + '
                 literalDirecEqEq='cos('+lettreAngle+')'
+                if angle1==-90:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos(-'+lettreAngle+') = 0'
+                elif angle1==-180:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos(-'+lettreAngle+') = -1'
+                elif angle1==-270:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos(-'+lettreAngle+') = 0'
+                elif angle1==270:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos(-'+lettreAngle+') = 0'
+                else:
+                    signeLiteralDirecEq=' + '
+                    literalDirecEq='cos(-'+lettreAngle+')'
+                
         return signeDirec,chiffreDirec,signeLiteralDirec,literalDirec,signeLiteralDirecEq,literalDirecEq,signeLiteralDirecEqEq,literalDirecEqEq
     #si c'est indirect
     else:
-
         if (round(cos(radians(angle1)),2)==-round(sin(radians(abs(angleE))),2)):
             #L'angle est positif
             if angleE>=0:
@@ -117,6 +142,7 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     literalIndirec='cos('+lettreAngle+'+π/2)'
                     signeLiteralEq='-'
                     literalIndirecEq='sin('+lettreAngle+')'
+                
                 #forcément -270
                 elif angleI==-270:
                     signeIndirec='+'
@@ -125,72 +151,76 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     literalIndirec='cos('+lettreAngle+'-3π/2)'
                     signeLiteralEq='-'
                     literalIndirecEq='sin('+lettreAngle+')'
-                else:
-                    if angleE==0:
-                            
-                        if angleI==-90:
-                            signeIndirec='+'
-                            chiffreIndirec='cos('+str(angle1)+')'
-                            signeLiteral='+'
-                            literalIndirec='cos(-π/2)'
-                            signeLiteralEq='+'
-                            literalIndirecEq='0'
-                    elif angleE==180:
-                        if angleI==-90:
-                            signeIndirec='+'
-                            chiffreIndirec='cos('+str(angle1)+')'
-                            signeLiteral='+'
-                            literalIndirec='cos(π/2)'
-                            signeLiteralEq='+'
-                            literalIndirecEq='0'
+    
+                elif angleI==-90:
+                    
+                    signeIndirec='+'
+                    chiffreIndirec='cos('+str(angle1)+')'
+                    signeLiteral='+'
+                    literalIndirec='cos('+lettreAngle+'-π/2)'
+                    if angleE==270:
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+')=-1'
                     else:
-                        print(angle1)
-                        print(angleE)
-                        print(angleI)
-                        print('bizarre1')
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+')'
+  
+
             #L'angle E est négatif
             else:
-
                 if angleI==-90:
                     signeIndirec='+'
                     chiffreIndirec='cos('+str(angle1)+')'
                     signeLiteral='+'
                     literalIndirec='cos(-'+lettreAngle+'-π/2)'
-                    signeLiteralEq='-'
-                    literalIndirecEq='sin('+lettreAngle+')'
+                    if angleE==-270:
+                        signeLiteralEq='-'
+                        literalIndirecEq='sin('+lettreAngle+') = +1'
+                    else:
+                        signeLiteralEq='-'
+                        literalIndirecEq='sin('+lettreAngle+')'
                     
                 #forcément +270
                 elif angleI==270:
                     signeIndirec='+'
                     chiffreIndirec='cos('+str(angle1)+')'
                     signeLiteral='+'
-                    literalIndirec='cos('+lettreAngle+'+3π/2)'
-                    signeLiteralEq='-'
-                    literalIndirecEq='sin('+lettreAngle+')'
+                    literalIndirec='cos(-'+lettreAngle+'+3π/2)'
+                    if angleE==-90:
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+') = -1'
+                    elif angleE==-180:
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+') = +1'            
+                    else:
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+')'
                 
                 else:
                     if angleE==-180:
-                        
+                        signeIndirec='+'
+                        chiffreIndirec='cos('+str(angle1)+')'
+                        signeLiteral='+'
+                        literalIndirec='cos(π/2-'+lettreAngle+')'
                         if angleI==90:
-                            signeIndirec='+'
-
-                            chiffreIndirec='cos('+str(angle1)+')'
-                            signeLiteral='+'
-                            literalIndirec='cos(-π/2)'
                             signeLiteralEq='+'
-                            literalIndirecEq='0'
+                            literalIndirecEq='sin('+lettreAngle+') = 0'
                         else:
                             print(angle1)
                             print(angleE)
                             print(angleI)
-                            print('bizarre21')
+                            print('bizarre1')
                     else:
-                        
                         print(angle1)
                         print(angleE)
                         print(angleI)
                         print('bizarre2')
+
+
+            return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
+
         else:
+            print('ok')
             #L'angle est positif
             if angleE>=0:
                 if angleI==-90:
@@ -198,8 +228,15 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     chiffreIndirec='cos('+str(angle1)+')'
                     signeLiteral='+'
                     literalIndirec='cos('+lettreAngle+'-π/2)'
-                    signeLiteralEq='+'
-                    literalIndirecEq='sin('+lettreAngle+')'
+                    if angleE==90: 
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+') = +1'
+                    elif angleE==270:
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+') = -1'
+                    else:
+                        signeLiteralEq='+'
+                        literalIndirecEq='sin('+lettreAngle+')'
                 #forcément +270
                 elif angleI==270:
                     signeIndirec='+'
@@ -220,6 +257,7 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     chiffreIndirec='cos('+str(angle1)+')'
                     signeLiteral='+'
                     literalIndirec='cos(-'+lettreAngle+'+π/2)'
+                    
                     signeLiteralEq='+'
                     literalIndirecEq='sin('+lettreAngle+')'
                 #forcément -270
@@ -235,12 +273,12 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     print(angleE)
                     print(angleI)
                     print('bizarre4')
-        return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
-                
+
+            return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
 
 
 #####################                         ################################
-#Créer les Widget
+#Créer les classes de type Widget
 
 class Barres(Cadreur):
     ctrPtxVirtuel=NumericProperty(0)
@@ -435,9 +473,10 @@ class Choix_angle(Cadreur,ToggleButton):
 class Assembleur(Cadreur):
     
 ##On déféinit les coordonnées qui seront 'envoyées' à bUtilisateur
+#ex et ey sont les 2 points de coordonnées de la barre utilisateur
+
     ex=NumericProperty(0)
     ey=NumericProperty(0)
-    #ex et ey sont les 2 points de coordonnées de la barre utilisateur
     sens=StringProperty('')
     directProjec=NumericProperty(0)
     indirectIntProjec=NumericProperty(0)
@@ -625,7 +664,7 @@ class Assembleur(Cadreur):
 
 
 class Interpreteur(Assembleur):
-    #Il récupère les données de l'orchestreur
+    #Il récupère les données de l'assembleur
     #Il analyse et il calcul le bon résultat en fonction de l'état des éléments
     #du cercle
     angleDirec=NumericProperty(0)
@@ -695,11 +734,13 @@ class Interpreteur(Assembleur):
                                           self.resultatIndirec[5],12.5/100)
 
         self.add_widget(self.equationLiteralEq)
+        
+        
         self.bind(literalDirecEq=self.equationLiteralEq.setter('projecDirec'))
         self.bind(literalIndirecEq=self.equationLiteralEq.setter('projecIndirec'))
-        
         self.bind(signeLitDirEq=self.equationLiteralEq.setter('signe1'))
         self.bind(signeLitIndirEq=self.equationLiteralEq.setter('signe2'))
+        
         self.bind(angleProjection=self.on_affiche_direct)
         self.bind(angleProjection=self.on_affiche_indirect_E)
         self.bind(angleProjection=self.on_affiche_indirect_I)
@@ -824,8 +865,7 @@ class Afficheur(Interpreteur):
     #La classe Affiche récupère : l'angle, le rayon et le texte à afficher
     #le rôle de l'afficheur est également de mettre à jour les données
     #lors d'une évolution sur le cercle : chgt de cercle, 
-    #Toujours dans son rôle l'afficheur, il calcule la taille idéale en 
-    #fonction de la police donnée par l'utilisateur
+   
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
         self.labelDegre=[]
@@ -862,7 +902,8 @@ class Afficheur(Interpreteur):
         self.bx.bind(changePtsSpeciaux=self.on_com_bx)
         self.by.bind(changePtsSpeciaux=self.on_com_by)
         #Quand le cercle change de direction : horaire <> trigo
-        self.pjx.bind(angleCible=self.on_mouv_angle)
+        self.pjx.bind(angleMesure=self.on_mouv_angle)
+
         self.bind(r=self.on_commenceLabel)
         #Changement lorsque angle de projection change de valeur
         self.bind(angleProjection=self.on_commenceLabel)
@@ -906,7 +947,7 @@ class Afficheur(Interpreteur):
             self.flecheBarreX.aMaj=False
             
     def on_commence(self,*largs):
-        ##Cette fonction fait ## choses: 
+        ##Cette méthode fait ## choses: 
         #-calculer la largeur à occuper
         #-la largeur totale occupée
         #-calculer la proportion de la plus grande étiquette->équationLiteralEq
@@ -1088,16 +1129,21 @@ class Afficheur(Interpreteur):
         self.on_commenceLabel()
     def on_commenceLabel(self,*largs):
         #Cette méthode est une fonction qui affiche les degrés ainsi que
-        #l'angle alpha
+
         #Nous allons calculer le rayon de l'angle à afficher
         self.rayonAA=self.pjx.ratioP*self.r-((self.pjx.ratioP*self.r)-(self.pjy.ratioE*self.r))/1.8
-        #Nous calculer l'angle de positionnement qui correspond à la moitié de l'angleCIble
-        self.angleMoit=self.pjx.angleCible/2
-        #S'il est trop faible
-        if self.angleMoit<15:
-            self.angleMoit=345
+        #Pour initialiser la position de l'angle alpha ou béta
+        if self.angleProjection =='alpha':
+            if self.bx.etatActuel=='xPdroit':
+                self.angleMoit=self.pjx.angleCible/2
+                #S'il est trop faible
+                if self.angleMoit<15:
+                    self.angleMoit=345
+
+                self.angleAffiche.ids.label.pos[0],self.angleAffiche.ids.label.pos[1]=points_du_cercle(self.centrex,self.centrey,self.rayonAA,self.angleMoit)
+
+
         #On calcule les positions du label
-        self.angleAffiche.ids.label.pos[0],self.angleAffiche.ids.label.pos[1]=points_du_cercle(self.centrex,self.centrey,self.rayonAA,self.angleMoit)
         self.hauteurAA=self.rayonAA*1.1-self.rayonAA
         self.angleAffiche.ids.label.texture_size[1]=self.hauteurAA
         self.angleAffiche.ids.label.texture_update()
@@ -1247,6 +1293,8 @@ class Afficheur(Interpreteur):
             
     def on_mouv_angle(self,*largs):
         #Ce n'est que pour afficher l'angle
+        #Cette méthode est appelée quand l'utilisateur modifie la position de la barre
+        #utilisateur (voir classe Assembleur)
         if self.angleProjection =='alpha':
             if self.bx.etatActuel=='xPdroit':
                 self.angleMoit=self.pjx.angleCible/2
@@ -1359,7 +1407,6 @@ class Label_angle(Widget):
     couleurLabel=ListProperty()
     def __init__(self,nom,couleurLabel,**kwargs):
         super().__init__(**kwargs)
-
         self.nom=nom
         self.couleurLabel=couleurLabel
 

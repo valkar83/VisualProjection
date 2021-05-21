@@ -11,6 +11,12 @@ from fleche import Fleche
 
 ###########################   FONCTIONS    ###################################
 def calcul_angle(angleDeProjection,complementaire,exterieur,nomAxe,angleAxe,angleciAxe):
+    #Pour le calcul des angles comme par exemple pour la variable angleMesure,
+    #le sens direct est pris par défaut =>
+    #dans le sens horaire = angle négatif
+    #dans le sens trigo = angle positif
+    #et ceux, même si le sens effectif est indirect
+    #ça sera à l'intérpréteur de trancher sur le signe réel (voir main.py)
     if angleDeProjection=='alpha':
         if complementaire==False:
             if exterieur:
@@ -314,11 +320,12 @@ def projecteurDN(initialisation,anglePreNeg, angleNeg,angleDiff,angleSupp,listeA
                    widget=listeAngleNeg[str(i),str(ratioP)][0]
                    widget.couleur[3]=0
 class ProjectionDirect(Widget):
-    #Pour le calcul des angles, le sens direct est pris par défaut
-    #dans le sens horaire => angle négatif
-    #dans le sens trigo => angle positif
+    #Pour le calcul des angles comme par exemple pour la variable angleMesure,
+    #le sens direct est pris par défaut =>
+    #dans le sens horaire = angle négatif
+    #dans le sens trigo = angle positif
     #et ceux, même si le sens effectif est indirect
-    #ça sera à l'intérpréteur de trancher sur le signe réel
+    #ça sera à l'intérpréteur de trancher sur le signe réel (voir main.py)
     angleSupp=BooleanProperty(False)
     axeX=StringProperty('')
     axeY=StringProperty('')
@@ -457,7 +464,6 @@ class ProjectionDirect(Widget):
                 self.angleNeg=self.listeAngle[str(self.angleCible),str(self.ratioP)][1]
                 ###Calcul angleMesure avec xPgauche
                 self.angleMesure=calcul_angle(self.nomDeProjection, False, True, self.axeX, self.angleAxeX, self.angleNeg)
-                
                 self.anglePreNeg=self.listeAngle[str(self.anglePre),str(self.ratioP)][1]
                 self.angleDiff=self.angleNeg-self.anglePreNeg
                 projecteurDN(False, self.anglePreNeg, self.angleNeg, self.angleDiff,
@@ -1008,13 +1014,16 @@ class ProjectionIndirect(Widget):
             
                     self.angleMesureI=calcul_angle(self.nomDeProjection, False, False, self.axeY,
                                                   self.angleAxeY, self.angleAxeX)
+                    print(self.angleMesureI)
                     self.angleCibleNeg=self.listeAngle[str(self.angleCible),str(self.ratioE)][1]
                     self.betaNeg=transform_neg_beta(self.angleCibleNeg)
 
                     # puis l'angle extérieur
-                    self.angleAxeYBetaNeg=transform_neg_beta(-90)
+                    self.angleAxeXBetaNeg=transform_neg_beta(0)
+                    
                     self.angleMesureE=calcul_angle(self.nomDeProjection, False, True,
-                                              self.axeY, self.angleAxeYBetaNeg, self.betaNeg)
+                                              self.axeX, self.angleAxeXBetaNeg, self.betaNeg)
+                    print(self.angleMesureE)
                     self.dincrement=-1
                     ##on va s'occuper des angles intérieurs
                     for i in range(359,-1,self.dincrement):
