@@ -132,149 +132,123 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
         return signeDirec,chiffreDirec,signeLiteralDirec,literalDirec,signeLiteralDirecEq,literalDirecEq,signeLiteralDirecEqEq,literalDirecEqEq
     #si c'est indirect
     else:
-        if (round(cos(radians(angle1)),2)==-round(sin(radians(abs(angleE))),2)):
-            #L'angle est positif
-            if angleE>=0:
-                if angleI==90:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos('+lettreAngle+'+π/2)'
-                    signeLiteralEq='-'
-                    literalIndirecEq='sin('+lettreAngle+')'
-                
-                #forcément -270
-                elif angleI==-270:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos('+lettreAngle+'-3π/2)'
-                    signeLiteralEq='-'
-                    literalIndirecEq='sin('+lettreAngle+')'
-    
-                elif angleI==-90:
-                    
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos('+lettreAngle+'-π/2)'
-                    if angleE==270:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+')=-1'
-                    else:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+')'
-  
+        #L'angle est positif
+        if angleE>=0:
+            if angleI==90:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos('+lettreAngle+'+π/2)'
+                signeLiteralEq='-'
+                literalIndirecEq='sin('+lettreAngle+')'
+            
+            #forcément -270
+            elif angleI==-270:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos('+lettreAngle+'-3π/2)'
+                signeLiteralEq='-'
+                literalIndirecEq='sin('+lettreAngle+')'
 
-            #L'angle E est négatif
-            else:
-                if angleI==-90:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos(-'+lettreAngle+'-π/2)'
-                    if angleE==-270:
-                        signeLiteralEq='-'
-                        literalIndirecEq='sin('+lettreAngle+') = +1'
-                    else:
-                        signeLiteralEq='-'
-                        literalIndirecEq='sin('+lettreAngle+')'
-                    
-                #forcément +270
-                elif angleI==270:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos(-'+lettreAngle+'+3π/2)'
-                    if angleE==-90:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+') = -1'
-                    elif angleE==-180:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+') = +1'            
-                    else:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+')'
+            elif angleI==-90:
                 
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos('+lettreAngle+'-π/2)'
+                if angleE==270:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = -1'
+                elif angleE==90:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = +1'
+                elif angleE==180:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==0:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
                 else:
-                    if angleE==-180:
-                        signeIndirec='+'
-                        chiffreIndirec='cos('+str(angle1)+')'
-                        signeLiteral='+'
-                        literalIndirec='cos(π/2-'+lettreAngle+')'
-                        if angleI==90:
-                            signeLiteralEq='+'
-                            literalIndirecEq='sin('+lettreAngle+') = 0'
-                        else:
-                            print(angle1)
-                            print(angleE)
-                            print(angleI)
-                            print('bizarre1')
-                    else:
-                        print(angle1)
-                        print(angleE)
-                        print(angleI)
-                        print('bizarre2')
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+')'
+            elif angleI==270:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos(-'+lettreAngle+'+3π/2)'
+                if angleE==0:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                else:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+')'
+            else:
+                print("angleI non traité")
 
-
-            return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
-
+        #L'angle E est négatif
         else:
-            print('ok')
-            #L'angle est positif
-            if angleE>=0:
-                if angleI==-90:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos('+lettreAngle+'-π/2)'
-                    if angleE==90: 
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+') = +1'
-                    elif angleE==270:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+') = -1'
-                    else:
-                        signeLiteralEq='+'
-                        literalIndirecEq='sin('+lettreAngle+')'
-                #forcément +270
-                elif angleI==270:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos('+lettreAngle+'+3π/2)'
-                    signeLiteralEq='+'
-                    literalIndirecEq='sin('+lettreAngle+')'
+            if angleI==-90:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos(-'+lettreAngle+'-π/2)'
+                if angleE==-270:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = +1'
+                elif angleE==-90:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = -1'
+                elif angleE==-180:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
                 else:
-                    print(angle1)
-                    print(angleE)
-                    print(angleI)
-                    print('bizarre3')
-            #L'angle E est négatif
-            else:
-                if angleI==90:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos(-'+lettreAngle+'+π/2)'
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+')'
                     
-                    signeLiteralEq='+'
-                    literalIndirecEq='sin('+lettreAngle+')'
-                #forcément -270
-                elif angleI ==-270:
-                    signeIndirec='+'
-                    chiffreIndirec='cos('+str(angle1)+')'
-                    signeLiteral='+'
-                    literalIndirec='cos(-'+lettreAngle+' -3π/2)'
-                    signeLiteralEq='+'
-                    literalIndirecEq='sin('+lettreAngle+')'
+                    
+            elif angleI==90:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos(-'+lettreAngle+'+π/2)'
+                
+                signeLiteralEq='+'
+                literalIndirecEq='sin('+lettreAngle+')'
+            #forcément -270
+            elif angleI ==-270:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos(-'+lettreAngle+' -3π/2)'
+                signeLiteralEq='+'
+                literalIndirecEq='sin('+lettreAngle+')'
+            #forcément +270
+            elif angleI==270:
+                signeIndirec='+'
+                chiffreIndirec='cos('+str(angle1)+')'
+                signeLiteral='+'
+                literalIndirec='cos(-'+lettreAngle+'+3π/2)'
+                if angleE==-90:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = -1'
+                elif angleE==-180:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==-270:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = +1'
+                elif angleE==0:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
                 else:
-                    print(angle1)
-                    print(angleE)
-                    print(angleI)
-                    print('bizarre4')
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+')'
+            
+            else:
+                print("angleI non traité")
 
-            return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
+        return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
 
 
 #####################                         ################################

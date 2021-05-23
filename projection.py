@@ -1014,16 +1014,10 @@ class ProjectionIndirect(Widget):
             
                     self.angleMesureI=calcul_angle(self.nomDeProjection, False, False, self.axeY,
                                                   self.angleAxeY, self.angleAxeX)
-                    print(self.angleMesureI)
-                    self.angleCibleNeg=self.listeAngle[str(self.angleCible),str(self.ratioE)][1]
-                    self.betaNeg=transform_neg_beta(self.angleCibleNeg)
 
-                    # puis l'angle extérieur
-                    self.angleAxeXBetaNeg=transform_neg_beta(0)
                     
                     self.angleMesureE=calcul_angle(self.nomDeProjection, False, True,
-                                              self.axeX, self.angleAxeXBetaNeg, self.betaNeg)
-                    print(self.angleMesureE)
+                                              self.axeX, self.angleAxeX, self.angleCible)
                     self.dincrement=-1
                     ##on va s'occuper des angles intérieurs
                     for i in range(359,-1,self.dincrement):
