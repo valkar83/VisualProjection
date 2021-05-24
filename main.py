@@ -452,9 +452,7 @@ class Assembleur(Cadreur):
     ex=NumericProperty(0)
     ey=NumericProperty(0)
     sens=StringProperty('')
-    directProjec=NumericProperty(0)
-    indirectIntProjec=NumericProperty(0)
-    indirectExtProjec=NumericProperty(0)
+
     angleProjection=StringProperty('')
     angleSup=BooleanProperty(False)
     
@@ -536,7 +534,6 @@ class Assembleur(Cadreur):
         #Le sens du repère        
         self.pjy=ProjectionIndirect('yPhaut','alpha',self.bx.etatActuel,self.bx.angleAxe,
                                   self.by.etatActuel,self.by.angleAxe,self.cible.angle)
-        self.pjy=WeakProxy(self.pjy)
         self.add_widget(self.pjy)
         #Le sens du repère
         self.bx.bind(etatActuel=self.pjx.setter('axeX'))
@@ -549,15 +546,6 @@ class Assembleur(Cadreur):
         self.bx.bind(angleAxe=self.pjy.setter('angleAxeX'))
         self.by.bind(angleAxe=self.pjy.setter('angleAxeY'))
         
-        ##Nous récupérons et lions les angles produits par pjx et pjy
-        self.directProjec=self.pjx.angleMesure
-        self.indirectExtProjec=self.pjy.angleMesureE
-        self.indirectIntProjec=self.pjy.angleMesureI
-        #Les projections renvoient leurs valeurs
-        self.pjx.bind(angleMesure=self.setter('directProjec'))
-        self.pjy.bind(angleMesureE=self.setter('indirectExtProjec'))
-        self.pjy.bind(angleMesureI=self.setter('indirectIntProjec'))
-
 
         
         #Ici nous créons la classe qui représente graphiquement le sens
@@ -657,31 +645,35 @@ class Interpreteur(Assembleur):
     signeLitIndirEq=StringProperty('')
     literalIndirecEq=StringProperty('')
     literalIndirecEqEq=StringProperty('')
+    
+    numDirecProjec=NumericProperty(0)
+    
+    numIndirecProjecI=NumericProperty(0)
+    numIndirecProjecE=NumericProperty(0)
+    
+    droitPass=BooleanProperty(False)
 
-    angleIndirecE=NumericProperty(0)
-    angleIndirecI=NumericProperty(0)
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
         self.j=0
         self.resultatDirec=[]
         self.resultatIndirec=[]
         if self.sens=='Indirect':
-            self.angleDirec=self.directProjec*(-1)
-            self.angleIndirecE=self.indirectExtProjec*(-1)
-            self.angleIndirecI=self.indirectIntProjec*(-1)
-            self.angleIndirec=self.angleIndirecE+self.angleIndirecI
-            
+            self.numDirecProjec=self.pjx.angleMesure*(-1)
+            self.numIndirecProjecE=self.pjy.angleMesureE*(-1)
+            self.numIndirecProjecI=self.pjy.angleMesureI*(-1)
         else:
-            self.angleDirec=self.directProjec
-            self.angleIndirecE=self.indirectExtProjec
-            self.angleIndirecI=self.indirectIntProjec
-            self.angleIndirec=self.angleIndirecE+self.angleIndirecI
+            self.numDirecProjec=self.pjx.angleMesure
+            self.numIndirecProjecE=self.pjy.angleMesureE
+            self.numIndirecProjecI=self.pjy.angleMesureI
+        self.angleIndirec=self.numIndirecProjecE+self.numIndirecProjecI
+            
 
         self.resultatDirec=determineur(self.angleProjection,self.angleSup,
-                        True,self.angleDirec)
+                        True,self.numDirecProjec)
         self.resultatIndirec=determineur(self.angleProjection,self.angleSup,
-                                         False,self.angleIndirec,self.angleIndirecE,
-                                         self.angleIndirecI)
+                                         False,self.angleIndirec,self.numIndirecProjecE,
+                                         self.numIndirecProjecI)
 
         self.equationNumerique=Zone_texte('Equation numérique : ',self.resultatDirec[0],
                                           self.resultatDirec[1],#cos
@@ -716,22 +708,29 @@ class Interpreteur(Assembleur):
         self.bind(signeLitIndirEq=self.equationLiteralEq.setter('signe2'))
         
         self.bind(angleProjection=self.on_affiche_direct)
-        self.bind(angleProjection=self.on_affiche_indirect_E)
-        self.bind(angleProjection=self.on_affiche_indirect_I)
+        self.bind(angleProjection=self.on_interprete_indirect_I)
+        self.bind(angleProjection=self.on_interprete_indirect_E)
+        
         self.bind(sens=self.on_affiche_direct)
-        self.bind(sens=self.on_affiche_indirect_E)
-        self.bind(sens=self.on_affiche_indirect_I)
-        self.bind(directProjec=self.on_affiche_direct)
-        self.bind(indirectExtProjec=self.on_affiche_indirect_E)
-        self.bind(indirectIntProjec=self.on_affiche_indirect_I)
-    def on_affiche_direct(self,directProjec,indirecExtProjec,**kwargs):
+        self.bind(sens=self.on_interprete_indirect_I)
+        self.bind(sens=self.on_interprete_indirect_E)
+    
+        
+        self.pjx.bind(angleMesure=self.on_affiche_direct)
+        self.pjy.bind(angleMesureI=self.on_interprete_indirect_I)
+        self.pjy.bind(angleMesureE=self.on_interprete_indirect_E)
+        
+    def on_affiche_direct(self,directProjec,ok,**kwargs):
         if self.sens=='Indirect':
-            self.angleDirec=self.directProjec*(-1)
+            self.numDirecProjec=self.pjx.angleMesure*(-1)
+
         else:
-            self.angleDirec=self.directProjec
+            self.numDirecProjec=self.pjx.angleMesure
+
             
+
         self.resultatDirec=determineur(self.angleProjection,self.angleSup,
-                        True,self.angleDirec)
+                        True,self.numDirecProjec)
         if self.angleProjection=='alpha':
             self.equationNumerique.couleurDirec=[1,0,0,1]
             self.equationLiteral.couleurDirec=[1,0,0,1]
@@ -752,62 +751,32 @@ class Interpreteur(Assembleur):
             self.literalIndirec=self.resultatDirec[3]
             self.signeLitIndirEq=self.resultatDirec[4]
             self.literalIndirecEq=self.resultatDirec[5]
+    def on_interprete_indirect_I(self,indirectExtProjec,indirectIntProjec,**kwargs):
+        if self.sens=='Indirect':
+             self.numIndirecProjecI=self.pjy.angleMesureI*(-1)
+        else:
+             self.numIndirecProjecI=self.pjy.angleMesureI
+        self.on_affichage_indirect()
+
+    def on_interprete_indirect_E(self,directProjec,indirectExtProjec,**kwargs):
+
+        if self.sens=='Indirect':
+            self.numIndirecProjecE=self.pjy.angleMesureE*(-1)
+        else:
+            self.numIndirecProjecE=self.pjy.angleMesureE
+        self.on_affichage_indirect()
+
+
+
+
+    def on_affichage_indirect(self,*largs,**kwargs):
+
+        self.angleIndirec=self.numIndirecProjecE+self.numIndirecProjecI
             
-    def on_affiche_indirect_E(self,directProjec,indirectExtProjec,**kwargs):
-        if self.sens=='Indirect':
-            self.angleIndirecE=self.indirectExtProjec*(-1)
-            self.angleIndirecI=self.indirectIntProjec*(-1)
-            self.angleIndirec=self.angleIndirecE+self.angleIndirecI
-
-        else:
-            self.angleIndirecE=self.indirectExtProjec
-            self.angleIndirecI=self.indirectIntProjec
-            self.angleIndirec=self.angleIndirecE+self.angleIndirecI
-
 
         self.resultatIndirec=determineur(self.angleProjection,self.angleSup,
-                                         False,self.angleIndirec,self.angleIndirecE,
-                                         self.angleIndirecI)
-        if self.angleProjection=='alpha':
-            self.equationNumerique.couleurIndirec=[0.18,0,0.42,1]
-            self.equationLiteral.couleurIndirec=[0.18,0,0.42,1]
-            self.equationLiteralEq.couleurIndirec=[0.18,0,0.42,1]
-            self.signeNumIn=self.resultatIndirec[0]
-            self.chiffreIndirec=self.resultatIndirec[1]
-            self.signeLitIndir=self.resultatIndirec[2]
-            self.literalIndirec=self.resultatIndirec[3]
-            self.signeLitIndirEq=self.resultatIndirec[4]
-            self.literalIndirecEq=self.resultatIndirec[5]
-        else:
-            self.equationNumerique.couleurIndirec=[1,0,0,1]
-            self.equationLiteral.couleurIndirec=[1,0,0,1]
-            self.equationLiteralEq.couleurIndirec=[1,0,0,1]
-
-            #En béta, l'apha de direct devient son indirect
-            #et l'alpha d'indirect devient son direct
-            self.signeNumDir=self.resultatIndirec[0]
-            self.chiffreDirec=self.resultatIndirec[1]
-
-            self.signeLitDir=self.resultatIndirec[2]
-            self.literalDirec=self.resultatIndirec[3]
-
-            self.signeLitDirEq=self.resultatIndirec[4]
-            self.literalDirecEq=self.resultatIndirec[5]
-    def on_affiche_indirect_I(self,directProjec,indirectExtProjec,**kwargs):
-        if self.sens=='Indirect':
-            self.angleIndirecE=self.indirectExtProjec*(-1)
-            self.angleIndirecI=self.indirectIntProjec*(-1)
-            self.angleIndirec=self.angleIndirecE+self.angleIndirecI
-
-        else:
-            self.angleIndirecE=self.indirectExtProjec
-            self.angleIndirecI=self.indirectIntProjec
-            self.angleIndirec=self.angleIndirecE+self.angleIndirecI
-
-
-        self.resultatIndirec=determineur(self.angleProjection,self.angleSup,
-                                         False,self.angleIndirec,self.angleIndirecE,
-                                         self.angleIndirecI)
+                                         False,self.angleIndirec,self.numIndirecProjecE,
+                                         self.numIndirecProjecI)
         if self.angleProjection=='alpha':
             self.equationNumerique.couleurIndirec=[0.18,0,0.42,1]
             self.equationLiteral.couleurIndirec=[0.18,0,0.42,1]
@@ -830,7 +799,6 @@ class Interpreteur(Assembleur):
             self.literalDirec=self.resultatIndirec[3]
             self.signeLitDirEq=self.resultatIndirec[4]
             self.literalDirecEq=self.resultatIndirec[5]
-
 class Afficheur(Interpreteur):
     #L'afficheur en s'appuyant sur les données récoltées par l'interpreteur
     #affiche les différentes informations comme l'angle alpha&béta et les degrés
