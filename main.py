@@ -139,17 +139,43 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                 chiffreIndirec='cos('+str(angle1)+')'
                 signeLiteral='+'
                 literalIndirec='cos('+lettreAngle+'+π/2)'
-                signeLiteralEq='-'
-                literalIndirecEq='sin('+lettreAngle+')'
+                if angleE==0:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==90:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = -1'
+                elif angleE==180:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==270:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+') = 1'
+                else:
+                    signeLiteralEq='-'
+                    literalIndirecEq='sin('+lettreAngle+')'
             
             #forcément -270
-            elif angleI==-270:
+            elif angleI ==-270:
                 signeIndirec='+'
                 chiffreIndirec='cos('+str(angle1)+')'
                 signeLiteral='+'
-                literalIndirec='cos('+lettreAngle+'-3π/2)'
-                signeLiteralEq='-'
-                literalIndirecEq='sin('+lettreAngle+')'
+                literalIndirec='cos('+lettreAngle+' -3π/2)'
+                if angleE==270:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = +1'
+                elif angleE==90:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = -1'
+                elif angleE==180:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==0:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                else:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+')'
 
             elif angleI==-90:
                 
@@ -185,7 +211,7 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     literalIndirecEq='sin('+lettreAngle+')'
             else:
                 print("angleI non traité")
-
+            return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
         #L'angle E est négatif
         else:
             if angleI==-90:
@@ -212,17 +238,22 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                 chiffreIndirec='cos('+str(angle1)+')'
                 signeLiteral='+'
                 literalIndirec='cos(-'+lettreAngle+'+π/2)'
-                
-                signeLiteralEq='+'
-                literalIndirecEq='sin('+lettreAngle+')'
-            #forcément -270
-            elif angleI ==-270:
-                signeIndirec='+'
-                chiffreIndirec='cos('+str(angle1)+')'
-                signeLiteral='+'
-                literalIndirec='cos(-'+lettreAngle+' -3π/2)'
-                signeLiteralEq='+'
-                literalIndirecEq='sin('+lettreAngle+')'
+                if angleE==0:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==-90:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = +1'
+                elif angleE==-180:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = 0'
+                elif angleE==-270:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+') = -1'
+                else:
+                    signeLiteralEq='+'
+                    literalIndirecEq='sin('+lettreAngle+')'
+
             #forcément +270
             elif angleI==270:
                 signeIndirec='+'
@@ -246,6 +277,8 @@ def determineur(nomAngle,angleActiv,Direct,angle1,angleE=0,angleI=0):
                     literalIndirecEq='sin('+lettreAngle+')'
             
             else:
+                print(angleE)
+                print(angleI)
                 print("angleI non traité")
 
         return signeIndirec,chiffreIndirec,signeLiteral,literalIndirec,signeLiteralEq,literalIndirecEq
@@ -651,7 +684,7 @@ class Interpreteur(Assembleur):
     numIndirecProjecI=NumericProperty(0)
     numIndirecProjecE=NumericProperty(0)
     
-    droitPass=BooleanProperty(False)
+    rePass=BooleanProperty(False)
 
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
@@ -708,17 +741,17 @@ class Interpreteur(Assembleur):
         self.bind(signeLitIndirEq=self.equationLiteralEq.setter('signe2'))
         
         self.bind(angleProjection=self.on_affiche_direct)
-        self.bind(angleProjection=self.on_interprete_indirect_I)
-        self.bind(angleProjection=self.on_interprete_indirect_E)
+        # self.bind(angleProjection=self.on_interprete_indirect_I)
+        # self.bind(angleProjection=self.on_interprete_indirect_E)
         
         self.bind(sens=self.on_affiche_direct)
-        self.bind(sens=self.on_interprete_indirect_I)
-        self.bind(sens=self.on_interprete_indirect_E)
+        # self.bind(sens=self.on_interprete_indirect_I)
+        # self.bind(sens=self.on_interprete_indirect_E)
     
-        
+        # self.bind(rePass=self.on_interprete_indirect_E)        
+    
         self.pjx.bind(angleMesure=self.on_affiche_direct)
-        self.pjy.bind(angleMesureI=self.on_interprete_indirect_I)
-        self.pjy.bind(angleMesureE=self.on_interprete_indirect_E)
+        self.pjy.bind(angleChange=self.on_interprete_indirect)
         
     def on_affiche_direct(self,directProjec,ok,**kwargs):
         if self.sens=='Indirect':
@@ -726,8 +759,6 @@ class Interpreteur(Assembleur):
 
         else:
             self.numDirecProjec=self.pjx.angleMesure
-
-            
 
         self.resultatDirec=determineur(self.angleProjection,self.angleSup,
                         True,self.numDirecProjec)
@@ -751,29 +782,17 @@ class Interpreteur(Assembleur):
             self.literalIndirec=self.resultatDirec[3]
             self.signeLitIndirEq=self.resultatDirec[4]
             self.literalIndirecEq=self.resultatDirec[5]
-    def on_interprete_indirect_I(self,indirectExtProjec,indirectIntProjec,**kwargs):
-        if self.sens=='Indirect':
-             self.numIndirecProjecI=self.pjy.angleMesureI*(-1)
-        else:
-             self.numIndirecProjecI=self.pjy.angleMesureI
-        self.on_affichage_indirect()
-
-    def on_interprete_indirect_E(self,directProjec,indirectExtProjec,**kwargs):
-
-        if self.sens=='Indirect':
-            self.numIndirecProjecE=self.pjy.angleMesureE*(-1)
-        else:
+    def on_interprete_indirect(self,indirectExtProjec,indirectIntProjec,**kwargs):
+        
+        if self.sens=='Direct':
+            self.numIndirecProjecI=self.pjy.angleMesureI
             self.numIndirecProjecE=self.pjy.angleMesureE
-        self.on_affichage_indirect()
 
-
-
-
-    def on_affichage_indirect(self,*largs,**kwargs):
-
-        self.angleIndirec=self.numIndirecProjecE+self.numIndirecProjecI
+        else:
+            self.numIndirecProjecI=self.pjy.angleMesureI*(-1)
+            self.numIndirecProjecE=self.pjy.angleMesureE*(-1)
             
-
+        self.angleIndirec=self.numIndirecProjecE+self.numIndirecProjecI
         self.resultatIndirec=determineur(self.angleProjection,self.angleSup,
                                          False,self.angleIndirec,self.numIndirecProjecE,
                                          self.numIndirecProjecI)
@@ -807,7 +826,7 @@ class Afficheur(Interpreteur):
     #La classe Affiche récupère : l'angle, le rayon et le texte à afficher
     #le rôle de l'afficheur est également de mettre à jour les données
     #lors d'une évolution sur le cercle : chgt de cercle, 
-   
+    rayonAA=NumericProperty(0)
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
         self.labelDegre=[]
@@ -1243,6 +1262,7 @@ class Afficheur(Interpreteur):
                 #S'il est trop faible
                 if self.angleMoit<15:
                     self.angleMoit=345
+                
 
                 self.angleAffiche.ids.label.pos[0],self.angleAffiche.ids.label.pos[1]=points_du_cercle(self.centrex,self.centrey,self.rayonAA,self.angleMoit)
             else:

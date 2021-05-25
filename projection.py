@@ -518,6 +518,7 @@ class ProjectionDirect(Widget):
                
     def on_changement(self,anglePre,angleCible):
         if self.nomDeProjection=='alpha':
+
             if self.axeX=='xPdroit':
                 directionneur('alpha',self.axeX,self.angleCible,self.ratioP,
                               self.listeAngle,self.flecheDirec)
@@ -602,6 +603,8 @@ class ProjectionIndirect(Widget):
     angleDiff=NumericProperty(0)
     dincrementE=NumericProperty(0)
     dincrementI=NumericProperty(0)
+    
+    angleChange=NumericProperty(0)
     def __init__(self,nomAxe,angleDeProjection,nomAxeX,angleAxeX,nomAxeY,angleAxeY,angleCible,**kwargs):
         #Contrairement à Projection DIrect, pas de gestion d'un béta Référencé=>
         #Plus d'algo => algo plus complexe
@@ -920,8 +923,7 @@ class ProjectionIndirect(Widget):
                             i=transform_neg_alpha(i)
                             self.widget=self.listeAngleNeg[str(i),str(self.ratioE)][0]
                             self.widget.couleur[3]=1
-
-                 
+        self.angleChange+=1
     def on_changement(self,anglePre,angleCible):
         if self.nomDeProjection=='alpha':
             if self.axeY=='yPhaut':
@@ -939,6 +941,7 @@ class ProjectionIndirect(Widget):
 
                     self.angleMesureI=calcul_angle(self.nomDeProjection, False, False, self.axeY,
                                                    self.angleAxeY, self.angleAxeX)
+
                     self.angleMesureE=calcul_angle(self.nomDeProjection, False, True, self.axeX,
                                                    self.angleAxeX, self.angleCible)
     
@@ -1074,6 +1077,7 @@ class ProjectionIndirect(Widget):
         #########################BETA###################################
         ################################################################
         else:
+            
             if self.axeX=='xPdroit':
                 if self.axeY=='yPhaut':
                     self.flecheActuelI.fleCouleur[3]=0
@@ -1244,3 +1248,4 @@ class ProjectionIndirect(Widget):
                             self.widgetE.couleur[3]=1
                         else:
                             self.widgetE.couleur[3]=0
+        self.angleChange+=1
